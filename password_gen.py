@@ -5,7 +5,7 @@ import secrets as sc
 import random as rand
 import pyperclip
 
-version = 0.2
+version = 0.3
 author = "Updated Cake"
 
 ##############################
@@ -114,7 +114,33 @@ def complexity():
     #print(totalChars)
 
     complexityReturn = (totalChars ** totalLength)
-    print("Complexity: ", complexityReturn)
+    #print("Complexity: ", complexityReturn)
+
+
+
+    passwordComplexity.config(state="normal")
+    passwordComplexity.delete(1.0, tk.END)
+    passwordComplexity.insert(tk.END, "The complexity of your password is " + str(complexityReturn) + f" character combinations, which is " + switchQuote(complexityReturn) + ".")
+    passwordComplexity.tag_configure("center", justify="center")
+    passwordComplexity.tag_add("center", "1.0", "end")
+    passwordComplexity.config(state="disabled")
+
+
+def switchQuote(complexityNumber):
+    if complexityNumber >= 24415814458511853031212217774297452627359068628009699173162412638385920137458858765365344460498378437353024168893874176:
+        return "definitely an overkill. It's fancy to generate it and you can be sure nobody will crack it, however good luck finding out where to use it"
+    elif complexityNumber >= 51302316161984144419861195565637095800805982753435183363003680415173369919685218532657532502016:
+        return "... an overkill? This password is for sure really secure but you won't be able to use it for a lot of services"
+    elif complexityNumber >= 1380674536088650126365233338290905239051505147118049339937652736:
+        return "an extremely strong password, but it might be too long for some services"
+    elif complexityNumber >= 37157429083410091685945089785856:
+        return "a very strong password, would be truly difficult to guess by brute-force password cracking method"
+    elif complexityNumber >= 475920314814253376475136:
+        return "a strong password, would be difficult to guess it by brute-force password cracking method" 
+    elif complexityNumber >= 6095689385410816:
+        return "not a very strong password, still more secure than \"qwerty123\", but it wouldn't be that hard to crack"
+    elif complexityNumber >= 689869781056:
+        return "a very weak password and would be easy to crack. This score also won't pass the password security requirements of most sites"
 
 
 ###########
@@ -136,7 +162,7 @@ icon = tk.PhotoImage(file="678129.png")
 window.iconphoto(True, icon)
 
 # Section to define window size and also put it into middle of the screen
-app_width = 760
+app_width = 780
 app_height = 540
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
@@ -296,7 +322,28 @@ copyButton = tk.Button(
     command=copyToClipboard
 )
 
+fillLabel3 = tk.Label(
+    window,
+    text="",
+    foreground=basicFG,
+    background=basicBG
+)
 
+passwordComplexity = tk.Text(
+    window,
+    height=8,
+    width=50,
+    bd=0,
+    font=("Arial",10,"bold"),
+    foreground=basicFG,
+    background=basicBG,
+    wrap="word"
+)
+
+passwordComplexity.insert(tk.END, "Complexity of your password...")
+passwordComplexity.tag_configure("center", justify="center")
+passwordComplexity.tag_add("center", "1.0", "end")
+passwordComplexity.config(state="disabled")
 
 
 
@@ -314,7 +361,8 @@ charSpecSpin.grid(row=7, column=0)
 passwordOutputField.grid(row=8, column=2)
 generateButton.grid(row=5, column=2)
 copyButton.grid(row=9, column=2)
-
+fillLabel3.grid(row=10, column=2, rowspan=2)
+passwordComplexity.grid(row=12, column=2)
 
 
 

@@ -121,7 +121,8 @@ def complexity():
     passwordComplexity.config(state="normal")
     passwordComplexity.delete(1.0, tk.END)
     passwordComplexity.insert(tk.END, "The complexity of your password is " + str(complexityReturn) + f" character combinations, which is " + switchQuote(complexityReturn) + ".")
-    passwordComplexity.tag_configure("center", justify="center")
+    switchQuoteColor(complexityReturn)
+    #passwordComplexity.tag_configure("center", justify="center")
     passwordComplexity.tag_add("center", "1.0", "end")
     passwordComplexity.config(state="disabled")
 
@@ -141,6 +142,22 @@ def switchQuote(complexityNumber):
         return "not a very strong password, still more secure than \"qwerty123\", but it wouldn't be that hard to crack"
     elif complexityNumber >= 689869781056:
         return "a very weak password and would be easy to crack. This score also won't pass the password security requirements of most sites"
+    
+def switchQuoteColor(complexityNumber):
+    if complexityNumber >= 24415814458511853031212217774297452627359068628009699173162412638385920137458858765365344460498378437353024168893874176:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#3ce85c")
+    elif complexityNumber >= 51302316161984144419861195565637095800805982753435183363003680415173369919685218532657532502016:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#3ce85c")
+    elif complexityNumber >= 1380674536088650126365233338290905239051505147118049339937652736:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#3ce85c")
+    elif complexityNumber >= 37157429083410091685945089785856:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#3ce85c")
+    elif complexityNumber >= 475920314814253376475136:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#95b01e") 
+    elif complexityNumber >= 6095689385410816:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#d15e17")
+    elif complexityNumber >= 689869781056:
+        return passwordComplexity.tag_configure("center", justify="center", foreground="#a61212")
 
 
 ###########
@@ -334,7 +351,7 @@ passwordComplexity = tk.Text(
     height=8,
     width=50,
     bd=0,
-    font=("Arial",10,"bold"),
+    font=("Arial",10,"italic", "bold"),
     foreground=basicFG,
     background=basicBG,
     wrap="word"

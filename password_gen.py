@@ -20,10 +20,13 @@ specialChars = st.punctuation
 
 # Main generating function of passwords
 def generatePassword():
+    global mainY
+    global mainZ
     mainX = int(AlpSpin.get())
     mainY = int(digitsSpin.get())
     mainZ = int(charSpecSpin.get())
 
+    global totalLength
     totalLength = mainX
     mainX = mainX - mainY - mainZ
     #print(mainX)
@@ -53,6 +56,7 @@ def generatePassword():
 
         global password
         password = "".join(rand.sample(pswd2,len(pswd2)))
+        complexity()
 
         #print("password: ",password, "length: ",len(password))
 
@@ -77,13 +81,41 @@ def generatePassword():
         passwordOutputField.tag_configure("center", justify="center", foreground="red")
         passwordOutputField.tag_add("center", "1.0", "end")
         passwordOutputField.config(state="disabled")
-
+    
 # Pop-up window to confirm copying password into clipboard
 # Should be controlled by check-box in future
 def copyToClipboard():
     pyperclip.copy(password)
     messagebox.showinfo("Clipboard", "Password successfully copied into clipboard.")
     
+
+### Calculate complexity of the password ###
+
+def complexity():
+
+    totalChars = 0
+
+    if(totalLength > (mainY + mainZ)):
+
+        if(int(AlpSpin.get()) > 0):
+            totalChars += len(lowAlp) + len(upAlp)
+        if(int(digitsSpin.get()) > 0):
+            totalChars += len(digits)
+        if(int(charSpecSpin.get()) > 0):
+            totalChars += len(specialChars)
+    else:
+
+        if(int(digitsSpin.get()) > 0):
+            totalChars += len(digits)
+        if(int(charSpecSpin.get()) > 0):
+            totalChars += len(specialChars)
+
+
+    #print(totalChars)
+
+    complexityReturn = (totalChars ** totalLength)
+    print("Complexity: ", complexityReturn)
+
 
 ###########
 ### GUI ###

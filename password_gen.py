@@ -5,7 +5,7 @@ import secrets as sc
 import random as rand
 import pyperclip
 
-version = 0.3
+version = 0.4
 author = "Updated Cake"
 
 ##############################

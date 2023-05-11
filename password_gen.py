@@ -18,6 +18,10 @@ upAlp = st.ascii_uppercase
 digits = st.digits
 specialChars = st.punctuation
 
+maxLength = 60
+maxDigits = 30
+maxSpecChar = 30
+
 # Main generating function of passwords
 def generatePassword():
     global mainY
@@ -35,7 +39,7 @@ def generatePassword():
     mainUpAlp = 0
 
     # Workaround for odd numbers to have same number of UpChars and LowChars
-    # This might be considered for a change as it's weak side of this function
+    # !! This might be considered for a change as it's weak side of this generating function
     if(mainX%2 == 0):
         mainLowAlp = int(mainX/2)
         mainUpAlp = int(mainX/2)
@@ -46,8 +50,25 @@ def generatePassword():
     # Generating and randomizing password
     # Check whether total length is bigger or the same as spec. char./digits count
     # to prevent errors and nonsenses
-    if(totalLength >= (mainY + mainZ)):
 
+    if(totalLength > maxLength or mainY > maxDigits or mainZ > maxSpecChar):
+
+        ### GUI part controlling password output label ###
+        # This will trigger if some inputs are over limits
+        passwordOutputField.config(state="normal")
+        passwordOutputField.delete(1.0, tk.END)
+        passwordOutputField.insert(tk.END, "Maximum length of password is " + str(maxLength) + 
+                                   " characters, maximum count of digits is " + str(maxDigits) +
+                                   " characters and maximum count of spec. chars. is " + str(maxSpecChar) + " characters.")
+        passwordOutputField.tag_configure("center", justify="center", foreground="red")
+        passwordOutputField.tag_add("center", "1.0", "end")
+        passwordOutputField.config(state="disabled")
+        complexityReset()
+
+
+    elif(totalLength >= (mainY + mainZ)):
+        
+        # This section will trigger if everything works as intended and it will generate password
         pswd2 = ""
         pswd2 += "".join(sc.choice(lowAlp) for i in range(mainLowAlp))
         pswd2 += "".join(sc.choice(upAlp) for i in range(mainUpAlp))
@@ -57,8 +78,6 @@ def generatePassword():
         global password
         password = "".join(rand.sample(pswd2,len(pswd2)))
         complexity()
-
-        #print("password: ",password, "length: ",len(password))
 
         ### GUI part controlling password output label ###
         # This will turn on when everything is alright and password is successfully generated to paste
@@ -85,16 +104,17 @@ def generatePassword():
 # Pop-up window to confirm copying password into clipboard
 # Should be controlled by check-box in future
 def copyToClipboard():
-    pyperclip.copy(password)
+    pyperclip.copy(password) # Copy content of password variable into clipboard
     messagebox.showinfo("Clipboard", "Password successfully copied into clipboard.")
     
 
 ### Calculate complexity of the password ###
-
 def complexity():
 
     totalChars = 0
 
+    # Determine if password is created also with alphabet or not
+    # Return totalChars possible on every position
     if(totalLength > (mainY + mainZ)):
 
         if(int(AlpSpin.get()) > 0):
@@ -110,23 +130,21 @@ def complexity():
         if(int(charSpecSpin.get()) > 0):
             totalChars += len(specialChars)
 
-
-    #print(totalChars)
-
+    # C = N^L => return total number of possible combinations of characters in entire password
+    # C = total complexity of password (possible combinations)
+    # N = total possible characters (94 if it's digits + low/up alphabet + spec. char.)
+    # L = length of the password
     complexityReturn = (totalChars ** totalLength)
-    #print("Complexity: ", complexityReturn)
 
-
-
+    ### GUI part controlling password complexity output text field ###
     passwordComplexity.config(state="normal")
     passwordComplexity.delete(1.0, tk.END)
     passwordComplexity.insert(tk.END, "The complexity of your password is " + str(complexityReturn) + f" character combinations, which is " + switchQuote(complexityReturn) + ".")
     switchQuoteColor(complexityReturn)
-    #passwordComplexity.tag_configure("center", justify="center")
     passwordComplexity.tag_add("center", "1.0", "end")
     passwordComplexity.config(state="disabled")
 
-
+# Change quote of complexity text field based on password strength - working together with switchQuoteColor
 def switchQuote(complexityNumber):
     if complexityNumber >= 24415814458511853031212217774297452627359068628009699173162412638385920137458858765365344460498378437353024168893874176:
         return "definitely an overkill. It's fancy to generate it and you can be sure nobody will crack it, however good luck finding out where to use it"
@@ -142,7 +160,8 @@ def switchQuote(complexityNumber):
         return "not a very strong password, still more secure than \"qwerty123\", but it wouldn't be that hard to crack"
     elif complexityNumber >= 689869781056:
         return "a very weak password and would be easy to crack. This score also won't pass the password security requirements of most sites"
-    
+
+# Change color of pass complexity text field based on password strength - working together with switchQuote 
 def switchQuoteColor(complexityNumber):
     if complexityNumber >= 24415814458511853031212217774297452627359068628009699173162412638385920137458858765365344460498378437353024168893874176:
         return passwordComplexity.tag_configure("center", justify="center", foreground="#3ce85c")
@@ -159,6 +178,15 @@ def switchQuoteColor(complexityNumber):
     elif complexityNumber >= 689869781056:
         return passwordComplexity.tag_configure("center", justify="center", foreground="#a61212")
 
+# Function to reset complexity text field (in case of error of other fields, etc.)
+def complexityReset():
+
+    passwordComplexity.config(state="normal")
+    passwordComplexity.delete(1.0, tk.END)
+    passwordComplexity.insert(tk.END, "Complexity of your password...")
+    passwordComplexity.tag_configure("center", justify="center", foreground=basicFG)
+    passwordComplexity.tag_add("center", "1.0", "end")
+    passwordComplexity.config(state="disabled")
 
 ###########
 ### GUI ###
@@ -179,13 +207,13 @@ icon = tk.PhotoImage(file="678129.png")
 window.iconphoto(True, icon)
 
 # Section to define window size and also put it into middle of the screen
-app_width = 780
-app_height = 540
-screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight()
-position_x = (screen_width - app_width) / 2
-position_y = (screen_height - app_height) / 2
-window.geometry(f"{app_width}x{app_height}+{int(position_x)}+{int(position_y)}")
+appWidth = 780
+appHeight = 540
+screenWidth = window.winfo_screenwidth()
+screenHeight = window.winfo_screenheight()
+positionX = (screenWidth - appWidth) / 2
+positionY = (screenHeight - appHeight) / 2
+window.geometry(f"{appWidth}x{appHeight}+{int(positionX)}+{int(positionY)}")
 window.resizable(False,False) # Turn off resizing window by user
 
 window.configure(bg=basicBG)
@@ -194,7 +222,7 @@ window.configure(bg=basicBG)
 ### Widgets ###
 
 # Fill labels to define first 2 rows and make things centered
-# !!! this is also configured with app_width and app_height of the window !!!
+# !!! this is also configured with appWidth and appHeight of the window !!!
 fillLabel1 = tk.Label(
     window,
     text="",

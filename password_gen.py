@@ -5,7 +5,7 @@ import secrets as sc
 import random as rand
 import pyperclip
 
-version = 0.4
+version = 0.5
 author = "Updated Cake"
 
 ##############################
@@ -188,6 +188,8 @@ def complexityReset():
     passwordComplexity.tag_add("center", "1.0", "end")
     passwordComplexity.config(state="disabled")
 
+
+
 ###########
 ### GUI ###
 ###########
@@ -200,215 +202,227 @@ basicFG = "#d9dfff" # white-blueish color, for text
 buttonBG = "#85dcde" # background for buttons inside app, light blue
 activeButtonBG = "#3ce85c" # background for active/pushed buttons, light green
 
-window = tk.Tk(className="PasswordGenerator")
-window.title("Password Generator")
-#window.iconbitmap("lock.ico")
-icon = tk.PhotoImage(file="678129.png")
-window.iconphoto(True, icon)
+# Main constructor class for creating window
+class AppWindow(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.className="PasswordGenerator"
+        self.title("Password Generator")
+        self.iconbitmap("lock.ico")
+        #icon = tk.PhotoImage(file="678129.png")
+        #self.iconphoto(True, icon)
 
-# Section to define window size and also put it into middle of the screen
-appWidth = 780
-appHeight = 540
-screenWidth = window.winfo_screenwidth()
-screenHeight = window.winfo_screenheight()
-positionX = (screenWidth - appWidth) / 2
-positionY = (screenHeight - appHeight) / 2
-window.geometry(f"{appWidth}x{appHeight}+{int(positionX)}+{int(positionY)}")
-window.resizable(False,False) # Turn off resizing window by user
+        # Section to define window size and also put it into middle of the screen
+        appWidth = 780
+        appHeight = 540
+        screenWidth = self.winfo_screenwidth()
+        screenHeight = self.winfo_screenheight()
+        positionX = (screenWidth - appWidth) / 2
+        positionY = (screenHeight - appHeight) / 2
+        self.geometry(f"{appWidth}x{appHeight}+{int(positionX)}+{int(positionY)}")
+        self.resizable(False,False) # Turn off resizing window by user
+        self.configure(bg=basicBG)
 
-window.configure(bg=basicBG)
+app = AppWindow()
 
+# Front page of password generator in def block
+# This one will be always turned on as first in the future
+# All GUI properties in def block
+def page1():
+    
+    ### Widgets ###
 
-### Widgets ###
+    # Fill labels to define first 2 rows and make things centered
+    # !!! this is also configured with appWidth and appHeight of the window !!!
+    fillLabel1 = tk.Label(
+        app,
+        text="",
+        foreground=basicFG,
+        background=basicBG
+    ).grid(row=0, column=0, columnspan=2, rowspan=2)
 
-# Fill labels to define first 2 rows and make things centered
-# !!! this is also configured with appWidth and appHeight of the window !!!
-fillLabel1 = tk.Label(
-    window,
-    text="",
-    foreground=basicFG,
-    background=basicBG
-).grid(row=0, column=0, columnspan=2, rowspan=2)
+    fillLabel2 = tk.Label(
+        app,
+        text="",
+        foreground=basicFG,
+        background=basicBG
+    ).grid(row=0, column=4, columnspan=2, rowspan=2)
 
-fillLabel2 = tk.Label(
-    window,
-    text="",
-    foreground=basicFG,
-    background=basicBG
-).grid(row=0, column=4, columnspan=2, rowspan=2)
+    # Name label of the software
+    infoLabel = tk.Label(
+        app,
+        text="Password Generator",
+        font=("Arial",25,"bold"),
+        foreground=basicFG,
+        background=basicBG
+    )
 
-# Name label of the software
-infoLabel = tk.Label(
-    window,
-    text="Password Generator",
-    font=("Arial",25,"bold"),
-    foreground=basicFG,
-    background=basicBG
-)
+    # Version and author label
+    infoVersion = tk.Label(
+        app,
+        text="v {}, author: {}\n".format(version, author),
+        font=("Arial",10,"italic"),
+        foreground=basicFG,
+        background=basicBG
+    )
 
-# Version and author label
-infoVersion = tk.Label(
-    window,
-    text="v {}, author: {}\n".format(version, author),
-    font=("Arial",10,"italic"),
-    foreground=basicFG,
-    background=basicBG
-)
+    spinLabel = tk.Label(
+        app,
+        text="Password length:\n(0-60)",
+        font=("Arial",10,"bold"),
+        foreground=basicFG,
+        background=basicBG,
+        padx=50
+    )
 
-spinLabel = tk.Label(
-    window,
-    text="Password length:\n(0-60)",
-    font=("Arial",10,"bold"),
-    foreground=basicFG,
-    background=basicBG,
-    padx=50
-)
+    global AlpSpin
+    AlpSpin = tk.Spinbox(
+        app,
+        from_=0,
+        to=60,
+        increment=1,
+        validate="key",
+        font=("Arial", 12),
+        bg=basicBGlight,
+        fg=basicFG,
+        bd=0,
+        width=5
+    )
 
-AlpSpin = tk.Spinbox(
-    window,
-    from_=0,
-    to=60,
-    increment=1,
-    validate="key",
-    font=("Arial", 12),
-    bg=basicBGlight,
-    fg=basicFG,
-    bd=0,
-    width=5
-)
+    AlpSpin.delete(0)
+    AlpSpin.insert(0, 16)
 
-AlpSpin.delete(0)
-AlpSpin.insert(0, 16)
+    spinLabel2 = tk.Label(
+        app,
+        text="Number count:",
+        font=("Arial",10,"bold"),
+        foreground=basicFG,
+        background=basicBG,
+        padx=50
+    )
 
-spinLabel2 = tk.Label(
-    window,
-    text="Number count:",
-    font=("Arial",10,"bold"),
-    foreground=basicFG,
-    background=basicBG,
-    padx=50
-)
+    global digitsSpin
+    digitsSpin = tk.Spinbox(
+        app,
+        from_=0,
+        to=60,
+        increment=1,
+        validate="key",
+        font=("Arial", 12),
+        bg=basicBGlight,
+        fg=basicFG,
+        bd=0,
+        width=5
+    )
 
-digitsSpin = tk.Spinbox(
-    window,
-    from_=0,
-    to=60,
-    increment=1,
-    validate="key",
-    font=("Arial", 12),
-    bg=basicBGlight,
-    fg=basicFG,
-    bd=0,
-    width=5
-)
+    digitsSpin.delete(0)
+    digitsSpin.insert(0, 5)
 
-digitsSpin.delete(0)
-digitsSpin.insert(0, 5)
+    spinLabel3 = tk.Label(
+        app,
+        text="Spec. char. count:",
+        font=("Arial",10,"bold"),
+        foreground=basicFG,
+        background=basicBG,
+        padx=50
+    )
 
-spinLabel3 = tk.Label(
-    window,
-    text="Spec. char. count:",
-    font=("Arial",10,"bold"),
-    foreground=basicFG,
-    background=basicBG,
-    padx=50
-)
+    global charSpecSpin
+    charSpecSpin = tk.Spinbox(
+        app,
+        from_=0,
+        to=60,
+        increment=1,
+        validate="key",
+        font=("Arial", 12),
+        bg=basicBGlight,
+        fg=basicFG,
+        bd=0,
+        width=5,
+    )
 
-charSpecSpin = tk.Spinbox(
-    window,
-    from_=0,
-    to=60,
-    increment=1,
-    validate="key",
-    font=("Arial", 12),
-    bg=basicBGlight,
-    fg=basicFG,
-    bd=0,
-    width=5,
-)
+    charSpecSpin.delete(0)
+    charSpecSpin.insert(0, 5)
 
-charSpecSpin.delete(0)
-charSpecSpin.insert(0, 5)
+    global passwordOutputField
+    passwordOutputField = tk.Text(
+        app,
+        height=5,
+        width=40,
+        bd=0,
+        font=("Arial",11,"bold"),
+        foreground=basicFG,
+        background=basicBG,
+        wrap="word"
+    )
 
-passwordOutputField = tk.Text(
-    window,
-    height=5,
-    width=40,
-    bd=0,
-    font=("Arial",11,"bold"),
-    foreground=basicFG,
-    background=basicBG,
-    wrap="word"
-)
+    passwordOutputField.insert(tk.END, "Generated pasword will be here...")
+    passwordOutputField.tag_configure("center", justify="center")
+    passwordOutputField.tag_add("center", "1.0", "end")
+    passwordOutputField.config(state="disabled")
 
-passwordOutputField.insert(tk.END, "Generated pasword will be here...")
-passwordOutputField.tag_configure("center", justify="center")
-passwordOutputField.tag_add("center", "1.0", "end")
-passwordOutputField.config(state="disabled")
-
-generateButton = tk.Button(
-    window,
-    text="Generate a password",
-    font=("Arial",12,"bold"),
-    bd=0,
-    background=buttonBG,
-    activebackground=activeButtonBG,
-    command=generatePassword
-)
-
-
-copyButton = tk.Button(
-    window,
-    text="Copy to clipboard",
-    font=("Arial",10,"bold"),
-    bd=0,
-    background=buttonBG,
-    activebackground=activeButtonBG,
-    command=copyToClipboard
-)
-
-fillLabel3 = tk.Label(
-    window,
-    text="",
-    foreground=basicFG,
-    background=basicBG
-)
-
-passwordComplexity = tk.Text(
-    window,
-    height=8,
-    width=50,
-    bd=0,
-    font=("Arial",10,"italic", "bold"),
-    foreground=basicFG,
-    background=basicBG,
-    wrap="word"
-)
-
-passwordComplexity.insert(tk.END, "Complexity of your password...")
-passwordComplexity.tag_configure("center", justify="center")
-passwordComplexity.tag_add("center", "1.0", "end")
-passwordComplexity.config(state="disabled")
+    generateButton = tk.Button(
+        app,
+        text="Generate a password",
+        font=("Arial",12,"bold"),
+        bd=0,
+        background=buttonBG,
+        activebackground=activeButtonBG,
+        command=generatePassword
+    )
 
 
+    copyButton = tk.Button(
+        app,
+        text="Copy to clipboard",
+        font=("Arial",10,"bold"),
+        bd=0,
+        background=buttonBG,
+        activebackground=activeButtonBG,
+        command=copyToClipboard
+    )
+
+    fillLabel3 = tk.Label(
+        app,
+        text="",
+        foreground=basicFG,
+        background=basicBG
+    )
+
+    global passwordComplexity
+    passwordComplexity = tk.Text(
+        app,
+        height=8,
+        width=50,
+        bd=0,
+        font=("Arial",10,"italic", "bold"),
+        foreground=basicFG,
+        background=basicBG,
+        wrap="word"
+    )
+
+    passwordComplexity.insert(tk.END, "Complexity of your password...")
+    passwordComplexity.tag_configure("center", justify="center")
+    passwordComplexity.tag_add("center", "1.0", "end")
+    passwordComplexity.config(state="disabled")
 
 
-### Grid system and positions ###
+    ### Grid system and positions ###
 
-infoLabel.grid(row=0, column=2)
-infoVersion.grid(row=1, column=2)
-spinLabel.grid(row=2, column=0)
-AlpSpin.grid(row=3, column=0)
-spinLabel2.grid(row=4, column=0)
-digitsSpin.grid(row=5, column=0)
-spinLabel3.grid(row=6, column=0)
-charSpecSpin.grid(row=7, column=0)
-passwordOutputField.grid(row=8, column=2)
-generateButton.grid(row=5, column=2)
-copyButton.grid(row=9, column=2)
-fillLabel3.grid(row=10, column=2, rowspan=2)
-passwordComplexity.grid(row=12, column=2)
+    infoLabel.grid(row=0, column=2)
+    infoVersion.grid(row=1, column=2)
+    spinLabel.grid(row=2, column=0)
+    AlpSpin.grid(row=3, column=0)
+    spinLabel2.grid(row=4, column=0)
+    digitsSpin.grid(row=5, column=0)
+    spinLabel3.grid(row=6, column=0)
+    charSpecSpin.grid(row=7, column=0)
+    passwordOutputField.grid(row=8, column=2)
+    generateButton.grid(row=5, column=2)
+    copyButton.grid(row=9, column=2)
+    fillLabel3.grid(row=10, column=2, rowspan=2)
+    passwordComplexity.grid(row=12, column=2)
 
 
-
-window.mainloop()
+page1()
+app.mainloop()

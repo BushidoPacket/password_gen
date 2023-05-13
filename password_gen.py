@@ -5,12 +5,14 @@ import secrets as sc
 import random as rand
 import pyperclip
 
-version = 0.5
+version = 0.6
 author = "Updated Cake"
 
 ##############################
 ### Main Code - Generating ###
 ##############################
+
+### Config part ###
 
 # Variables to save characters for multiple usage
 lowAlp = st.ascii_lowercase
@@ -18,11 +20,17 @@ upAlp = st.ascii_uppercase
 digits = st.digits
 specialChars = st.punctuation
 
+# Maximum defined length of each char. count, numbers above those values will throw handled error
 maxLength = 60
 maxDigits = 30
 maxSpecChar = 30
 
-# Main generating function of passwords
+# Pre-filled values in GUI config for character count
+startValueLength = 16
+startValueDigits = 5
+startValueSpChar = 5
+
+### Main generating function of passwords ###
 def generatePassword():
     global mainY
     global mainZ
@@ -190,10 +198,9 @@ def complexityReset():
 
 
 
-###########
-### GUI ###
-###########
-
+######################################################################################
+### GUI - most of the part created via Tkinter, commands hooked on functions above ###
+######################################################################################
 
 # Basic colors for GUI
 basicBG = "#191d30" # dark-blueish color, for backgrounds, etc.
@@ -208,7 +215,7 @@ class AppWindow(tk.Tk):
         super().__init__()
         self.className="PasswordGenerator"
         self.title("Password Generator")
-        self.iconbitmap("lock.ico")
+        self.iconbitmap("lock1.ico")
         #icon = tk.PhotoImage(file="678129.png")
         #self.iconphoto(True, icon)
 
@@ -219,16 +226,15 @@ class AppWindow(tk.Tk):
         screenHeight = self.winfo_screenheight()
         positionX = (screenWidth - appWidth) / 2
         positionY = (screenHeight - appHeight) / 2
-        self.geometry(f"{appWidth}x{appHeight}+{int(positionX)}+{int(positionY)}")
+        self.geometry(f"{appWidth}x{appHeight}+{int(positionX)}+{int(positionY)}") # Move app window into center of the screen
         self.resizable(False,False) # Turn off resizing window by user
         self.configure(bg=basicBG)
 
 app = AppWindow()
 
 # Front page of password generator in def block
-# This one will be always turned on as first in the future
 # All GUI properties in def block
-def page1():
+def main():
     
     ### Widgets ###
 
@@ -289,8 +295,9 @@ def page1():
         width=5
     )
 
+    # Insert pre-filled value
     AlpSpin.delete(0)
-    AlpSpin.insert(0, 16)
+    AlpSpin.insert(0, startValueLength)
 
     spinLabel2 = tk.Label(
         app,
@@ -315,8 +322,9 @@ def page1():
         width=5
     )
 
+    # Insert pre-filled value
     digitsSpin.delete(0)
-    digitsSpin.insert(0, 5)
+    digitsSpin.insert(0, startValueDigits)
 
     spinLabel3 = tk.Label(
         app,
@@ -341,8 +349,9 @@ def page1():
         width=5,
     )
 
+    # Insert pre-filled value
     charSpecSpin.delete(0)
-    charSpecSpin.insert(0, 5)
+    charSpecSpin.insert(0, startValueSpChar)
 
     global passwordOutputField
     passwordOutputField = tk.Text(
@@ -356,6 +365,7 @@ def page1():
         wrap="word"
     )
 
+    # Insert pre-filled text
     passwordOutputField.insert(tk.END, "Generated pasword will be here...")
     passwordOutputField.tag_configure("center", justify="center")
     passwordOutputField.tag_add("center", "1.0", "end")
@@ -370,7 +380,6 @@ def page1():
         activebackground=activeButtonBG,
         command=generatePassword
     )
-
 
     copyButton = tk.Button(
         app,
@@ -401,6 +410,7 @@ def page1():
         wrap="word"
     )
 
+    # Insert pre-filled text
     passwordComplexity.insert(tk.END, "Complexity of your password...")
     passwordComplexity.tag_configure("center", justify="center")
     passwordComplexity.tag_add("center", "1.0", "end")
@@ -424,5 +434,5 @@ def page1():
     passwordComplexity.grid(row=12, column=2)
 
 
-page1()
+main()
 app.mainloop()

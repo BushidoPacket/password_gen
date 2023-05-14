@@ -4,8 +4,9 @@ import string as st
 import secrets as sc
 import random as rand
 import pyperclip
+import csv
 
-version = 0.6
+version = 0.7
 author = "Updated Cake"
 
 ##############################
@@ -29,6 +30,33 @@ maxSpecChar = 30
 startValueLength = 16
 startValueDigits = 5
 startValueSpChar = 5
+
+
+### csv file system to save config ###
+doSave = 0
+
+# Upon start of the program, it will try to create settings.csv if it doesn't exist yet
+# csv file stores data about saving and user's imputs - password length, digits and spec. char. count
+# If the csv file exists, it will read it instead
+try:
+    with open("settings.csv", "x", newline="") as saveFile:
+        saveFile.write("Settings and configure file for Password Generator v {} by {}.\n".format(version,author))
+        saveFile.write("{}\n{}\n{}\n{}".format(doSave,startValueLength,startValueDigits,startValueSpChar))
+        saveDoSave = doSave
+        saveValueLength = startValueLength
+        saveValueDigits = startValueDigits
+        saveValuesSpChar = startValueSpChar
+except FileExistsError:
+    with open("settings.csv", "r", newline="") as saveFile:
+        read = csv.reader(saveFile)
+        next(read) # To skip first informational line
+        values = list(read)
+        saveDoSave = int(values[0][0])
+        saveValueLength = int(values[1][0])
+        saveValueDigits = int(values[2][0])
+        saveValuesSpChar = int(values[3][0])
+
+    
 
 ### Main generating function of passwords ###
 def generatePassword():
@@ -297,7 +325,7 @@ def main():
 
     # Insert pre-filled value
     AlpSpin.delete(0)
-    AlpSpin.insert(0, startValueLength)
+    AlpSpin.insert(0, saveValueLength)
 
     spinLabel2 = tk.Label(
         app,
@@ -324,7 +352,7 @@ def main():
 
     # Insert pre-filled value
     digitsSpin.delete(0)
-    digitsSpin.insert(0, startValueDigits)
+    digitsSpin.insert(0, saveValueDigits)
 
     spinLabel3 = tk.Label(
         app,
@@ -349,9 +377,22 @@ def main():
         width=5,
     )
 
+    saveSettings = tk.Checkbutton(
+        app,
+        text="Save settings",
+        height=0,
+        bd=0,
+        background=basicBG,
+        activebackground=basicBG,
+        activeforeground=basicFG,
+        foreground=basicFG,
+        selectcolor="black",
+        #command=saveValues
+    )
+
     # Insert pre-filled value
     charSpecSpin.delete(0)
-    charSpecSpin.insert(0, startValueSpChar)
+    charSpecSpin.insert(0, saveValuesSpChar)
 
     global passwordOutputField
     passwordOutputField = tk.Text(
@@ -427,6 +468,7 @@ def main():
     digitsSpin.grid(row=5, column=0)
     spinLabel3.grid(row=6, column=0)
     charSpecSpin.grid(row=7, column=0)
+    saveSettings.grid(row=8, column=0)
     passwordOutputField.grid(row=8, column=2)
     generateButton.grid(row=5, column=2)
     copyButton.grid(row=9, column=2)

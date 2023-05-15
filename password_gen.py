@@ -6,7 +6,7 @@ import random as rand
 import pyperclip
 import csv
 
-version = 0.8
+version = 0.9
 author = "Updated Cake"
 #GitHub => https://github.com/UpdatedCake
 
@@ -421,7 +421,7 @@ def main():
         height=5,
         width=40,
         bd=0,
-        font=("Arial",11,"bold"),
+        font=("Arial",12,"bold"),
         foreground=basicFG,
         background=basicBG,
         wrap="word"
@@ -445,7 +445,7 @@ def main():
 
     copyButton = tk.Button(
         app,
-        text="Copy to clipboard",
+        text="Copy password to clipboard",
         font=("Arial",10,"bold"),
         bd=0,
         background=buttonBG,
@@ -478,11 +478,46 @@ def main():
     passwordComplexity.tag_add("center", "1.0", "end")
     passwordComplexity.config(state="disabled")
 
+    rightInfoLabel1 = tk.Text(
+        app,
+        height=6,
+        width=25,
+        bd=0,
+        font=("Arial",10,"italic"),
+        foreground=basicFG,
+        background=basicBG,
+        wrap="word"
+    )
+
+    rightInfoLabel1.insert(tk.END, "Total length of strong password should be at least 12 characters and should have contain upper and lower case letters, digits and spec. characters.")
+    rightInfoLabel1.tag_configure("center", justify="center")
+    rightInfoLabel1.tag_add("center", "1.0", "end")
+    rightInfoLabel1.config(state="disabled")
+
+    rightInfoLabel2 = tk.Text(
+        app,
+        height=5,
+        width=25,
+        bd=0,
+        font=("Arial",10,"italic"),
+        foreground=basicFG,
+        background=basicBG,
+        wrap="word"
+    )
+
+    rightInfoLabel2.insert(tk.END, "You can save your settings inputs by checking the box.")
+    rightInfoLabel2.tag_configure("center", justify="center")
+    rightInfoLabel2.tag_add("center", "1.0", "end")
+    rightInfoLabel2.config(state="disabled")
+
 
     ### Grid system and positions ###
 
+    # Centered up (row 0-1, column=2)
     infoLabel.grid(row=0, column=2)
     infoVersion.grid(row=1, column=2)
+
+    # Centered left (column=0)
     spinLabel.grid(row=2, column=0)
     AlpSpin.grid(row=3, column=0)
     spinLabel2.grid(row=4, column=0)
@@ -490,12 +525,21 @@ def main():
     spinLabel3.grid(row=6, column=0)
     charSpecSpin.grid(row=7, column=0)
     saveSettings.grid(row=8, column=0)
+
+    # Centered middle (column=2)
     passwordOutputField.grid(row=8, column=2)
     generateButton.grid(row=5, column=2)
     copyButton.grid(row=9, column=2)
     fillLabel3.grid(row=10, column=2, rowspan=2)
     passwordComplexity.grid(row=12, column=2)
 
+    # Centered right (column=4)
+    rightInfoLabel1.grid(row=2, column=4, rowspan=3)
+    rightInfoLabel2.grid(row=6, column=4, rowspan=3)
+
+###############
+### Run app ###
+###############
 
 main() # All widgets in app window
 app.protocol("WM_DELETE_WINDOW", writeSave) # On exiting app, it will check if user wants to save inputs

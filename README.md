@@ -11,14 +11,6 @@ Basic principle and settings is trying to push user to use strong combined passw
 
 GUI is based on dark mode style with blueish colors to be easy to use. GUI also contains complexity algorithm to determine strength of the password and button to copy password into clipboard. Password generator is also using settings file to store settings of user's inputs if they wish to. 
 
-How the GUI looks like:
-
-![image](https://github.com/UpdatedCake/password_gen/assets/120878764/2990ecc6-b1b6-47e8-97ef-c83782599d06)
-
-![image](https://github.com/UpdatedCake/password_gen/assets/120878764/89631b5f-a5a9-48cc-9f2d-0a06a009f07b)
-
-
-
 _File pwd_gen_v1.0_folder.zip contains entire folder with modules and other files._
 
 _Password Generator v 1.0 has been tested only on Windows 10 v22H2 OS without containers._

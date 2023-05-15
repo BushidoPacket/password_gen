@@ -6,16 +6,17 @@ import random as rand
 import pyperclip
 import csv
 
-version = 0.7
+version = 0.8
 author = "Updated Cake"
+#GitHub => https://github.com/UpdatedCake
 
-##############################
-### Main Code - Generating ###
-##############################
+#######################################################
+### Main Code - Generating, user's settings, config ###
+#######################################################
 
 ### Config part ###
 
-# Variables to save characters for multiple usage
+# Variables to save characters for multiple usages
 lowAlp = st.ascii_lowercase
 upAlp = st.ascii_uppercase
 digits = st.digits
@@ -27,13 +28,14 @@ maxDigits = 30
 maxSpecChar = 30
 
 # Pre-filled values in GUI config for character count
+# Those pre-filled values can be overwritten by user's saved values in settings.csv
 startValueLength = 16
 startValueDigits = 5
 startValueSpChar = 5
 
 
 ### csv file system to save config ###
-doSave = 0
+doSave = 0 # Default = 0, save settings file = 1
 
 # Upon start of the program, it will try to create settings.csv if it doesn't exist yet
 # csv file stores data about saving and user's imputs - password length, digits and spec. char. count
@@ -56,7 +58,21 @@ except FileExistsError:
         saveValueDigits = int(values[2][0])
         saveValuesSpChar = int(values[3][0])
 
+# Function to check value of settings check button
+def saveStCallback(*args):
+    global doSave
+    doSave = saveStVar.get()
     
+# Check whether user wants to save values, if yes, it will edit csv file before quitting app
+def writeSave():
+    if (doSave == 1):
+        with open("settings.csv", "w", newline="") as saveFile:
+            saveFile.write("Settings and configure file for Password Generator v {} by {}.\n".format(version,author))
+            saveFile.write("{}\n{}\n{}\n{}".format(doSave,AlpSpin.get(),digitsSpin.get(),charSpecSpin.get()))
+
+    app.quit()
+
+
 
 ### Main generating function of passwords ###
 def generatePassword():
@@ -377,6 +393,11 @@ def main():
         width=5,
     )
 
+    # Pack of functions and variables to get value of saveSettings check button
+    global saveStVar
+    saveStVar = tk.IntVar()
+    saveStVar.trace("w", saveStCallback)
+
     saveSettings = tk.Checkbutton(
         app,
         text="Save settings",
@@ -387,7 +408,7 @@ def main():
         activeforeground=basicFG,
         foreground=basicFG,
         selectcolor="black",
-        #command=saveValues
+        variable=saveStVar
     )
 
     # Insert pre-filled value
@@ -476,5 +497,6 @@ def main():
     passwordComplexity.grid(row=12, column=2)
 
 
-main()
+main() # All widgets in app window
+app.protocol("WM_DELETE_WINDOW", writeSave) # On exiting app, it will check if user wants to save inputs
 app.mainloop()

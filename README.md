@@ -12,7 +12,9 @@ Basic principle and settings is trying to push user to use strong combined passw
 GUI is based on dark mode style with blueish colors to be easy to use. GUI also contains complexity algorithm to determine strength of the password and button to copy password into clipboard. Password generator is also using settings file to store settings of user's inputs if they wish to. 
 
 How the GUI looks like:
+
 ![image](https://github.com/UpdatedCake/password_gen/assets/120878764/8a69e9fb-582b-4d41-b820-553f2e9571cb)
+
 ![image](https://github.com/UpdatedCake/password_gen/assets/120878764/89631b5f-a5a9-48cc-9f2d-0a06a009f07b)
 
 

@@ -6,7 +6,7 @@ import random as rand
 import pyperclip
 import csv
 
-version = 0.9
+version = 1.0
 author = "Updated Cake"
 #GitHub => https://github.com/UpdatedCake
 
@@ -68,7 +68,7 @@ def writeSave():
     if (doSave == 1):
         with open("settings.csv", "w", newline="") as saveFile:
             saveFile.write("Settings and configure file for Password Generator v {} by {}.\n".format(version,author))
-            saveFile.write("{}\n{}\n{}\n{}".format(doSave,AlpSpin.get(),digitsSpin.get(),charSpecSpin.get()))
+            saveFile.write("{}\n{}\n{}\n{}".format(doSave,alpSpin.get(),digitsSpin.get(),charSpecSpin.get()))
 
     app.quit()
 
@@ -78,20 +78,18 @@ def writeSave():
 def generatePassword():
     global mainY
     global mainZ
-    mainX = int(AlpSpin.get())
+    mainX = int(alpSpin.get())
     mainY = int(digitsSpin.get())
     mainZ = int(charSpecSpin.get())
 
     global totalLength
     totalLength = mainX
     mainX = mainX - mainY - mainZ
-    #print(mainX)
-    #print(int(mainX/2))
     mainLowAlp = 0
     mainUpAlp = 0
 
     # Workaround for odd numbers to have same number of UpChars and LowChars
-    # !! This might be considered for a change as it's weak side of this generating function
+    # !! This might be considered for a change in future as it's maybe a weak/predictable side of this generating function
     if(mainX%2 == 0):
         mainLowAlp = int(mainX/2)
         mainUpAlp = int(mainX/2)
@@ -169,7 +167,7 @@ def complexity():
     # Return totalChars possible on every position
     if(totalLength > (mainY + mainZ)):
 
-        if(int(AlpSpin.get()) > 0):
+        if(int(alpSpin.get()) > 0):
             totalChars += len(lowAlp) + len(upAlp)
         if(int(digitsSpin.get()) > 0):
             totalChars += len(digits)
@@ -232,7 +230,6 @@ def switchQuoteColor(complexityNumber):
 
 # Function to reset complexity text field (in case of error of other fields, etc.)
 def complexityReset():
-
     passwordComplexity.config(state="normal")
     passwordComplexity.delete(1.0, tk.END)
     passwordComplexity.insert(tk.END, "Complexity of your password...")
@@ -248,7 +245,7 @@ def complexityReset():
 
 # Basic colors for GUI
 basicBG = "#191d30" # dark-blueish color, for backgrounds, etc.
-basicBGlight = "#333b61" # light version of it, under for text backgrounds and such things
+basicBGlight = "#333b61" # light version of it, under for fill backgrounds and such things
 basicFG = "#d9dfff" # white-blueish color, for text
 buttonBG = "#85dcde" # background for buttons inside app, light blue
 activeButtonBG = "#3ce85c" # background for active/pushed buttons, light green
@@ -260,8 +257,6 @@ class AppWindow(tk.Tk):
         self.className="PasswordGenerator"
         self.title("Password Generator")
         self.iconbitmap("lock1.ico")
-        #icon = tk.PhotoImage(file="678129.png")
-        #self.iconphoto(True, icon)
 
         # Section to define window size and also put it into middle of the screen
         appWidth = 780
@@ -274,7 +269,7 @@ class AppWindow(tk.Tk):
         self.resizable(False,False) # Turn off resizing window by user
         self.configure(bg=basicBG)
 
-app = AppWindow()
+app = AppWindow() # Instance of window
 
 # Front page of password generator in def block
 # All GUI properties in def block
@@ -325,8 +320,8 @@ def main():
         padx=50
     )
 
-    global AlpSpin
-    AlpSpin = tk.Spinbox(
+    global alpSpin
+    alpSpin = tk.Spinbox(
         app,
         from_=0,
         to=60,
@@ -340,8 +335,8 @@ def main():
     )
 
     # Insert pre-filled value
-    AlpSpin.delete(0)
-    AlpSpin.insert(0, saveValueLength)
+    alpSpin.delete(0)
+    alpSpin.insert(0, saveValueLength)
 
     spinLabel2 = tk.Label(
         app,
@@ -480,8 +475,8 @@ def main():
 
     rightInfoLabel1 = tk.Text(
         app,
-        height=6,
-        width=25,
+        height=8,
+        width=22,
         bd=0,
         font=("Arial",10,"italic"),
         foreground=basicFG,
@@ -489,7 +484,8 @@ def main():
         wrap="word"
     )
 
-    rightInfoLabel1.insert(tk.END, "Total length of strong password should be at least 12 characters and should have contain upper and lower case letters, digits and spec. characters.")
+    # Fill and lock text field
+    rightInfoLabel1.insert(tk.END, "How to:\nTotal length of strong password should be at least 12 characters and should have contain upper and lower case letters, digits and spec. characters.")
     rightInfoLabel1.tag_configure("center", justify="center")
     rightInfoLabel1.tag_add("center", "1.0", "end")
     rightInfoLabel1.config(state="disabled")
@@ -497,7 +493,7 @@ def main():
     rightInfoLabel2 = tk.Text(
         app,
         height=5,
-        width=25,
+        width=22,
         bd=0,
         font=("Arial",10,"italic"),
         foreground=basicFG,
@@ -505,6 +501,7 @@ def main():
         wrap="word"
     )
 
+    # Fill and lock text field
     rightInfoLabel2.insert(tk.END, "You can save your settings inputs by checking the box.")
     rightInfoLabel2.tag_configure("center", justify="center")
     rightInfoLabel2.tag_add("center", "1.0", "end")
@@ -519,7 +516,7 @@ def main():
 
     # Centered left (column=0)
     spinLabel.grid(row=2, column=0)
-    AlpSpin.grid(row=3, column=0)
+    alpSpin.grid(row=3, column=0)
     spinLabel2.grid(row=4, column=0)
     digitsSpin.grid(row=5, column=0)
     spinLabel3.grid(row=6, column=0)
@@ -534,8 +531,8 @@ def main():
     passwordComplexity.grid(row=12, column=2)
 
     # Centered right (column=4)
-    rightInfoLabel1.grid(row=2, column=4, rowspan=3)
-    rightInfoLabel2.grid(row=6, column=4, rowspan=3)
+    rightInfoLabel1.grid(row=2, column=4, rowspan=5)
+    rightInfoLabel2.grid(row=8, column=4, rowspan=3)
 
 ###############
 ### Run app ###

@@ -13,7 +13,7 @@ GUI is based on dark mode style with blueish colors to be easy to use. GUI also 
 
 How the GUI looks like:
 
-![image](https://github.com/UpdatedCake/password_gen/assets/120878764/8a69e9fb-582b-4d41-b820-553f2e9571cb)
+![image](https://github.com/UpdatedCake/password_gen/assets/120878764/2990ecc6-b1b6-47e8-97ef-c83782599d06)
 
 ![image](https://github.com/UpdatedCake/password_gen/assets/120878764/89631b5f-a5a9-48cc-9f2d-0a06a009f07b)
 

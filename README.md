@@ -20,5 +20,6 @@ How the GUI looks like:
 
 
 _File pwd_gen_v1.0_folder.zip contains entire folder with modules and other files._
+
 _Password Generator v 1.0 has been tested only on Windows 10 v22H2 OS without containers._
 

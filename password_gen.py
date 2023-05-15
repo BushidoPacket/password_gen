@@ -423,7 +423,7 @@ def main():
     )
 
     # Insert pre-filled text
-    passwordOutputField.insert(tk.END, "Generated pasword will be here...")
+    passwordOutputField.insert(tk.END, "Generated password will be here...")
     passwordOutputField.tag_configure("center", justify="center")
     passwordOutputField.tag_add("center", "1.0", "end")
     passwordOutputField.config(state="disabled")
